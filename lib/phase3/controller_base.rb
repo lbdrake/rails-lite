@@ -8,6 +8,8 @@ module Phase3
     # use ERB and binding to evaluate templates
     # pass the rendered html to render_content
     def render(template_name)
+      template = ERB.new(File.read("views/#{self.class.name.underscore}/#{template_name}.html.erb"))
+      render_content(template.result(binding), "text/html")
     end
   end
 end
