@@ -2,6 +2,7 @@ require_relative '../phase2/controller_base'
 require 'active_support'
 require 'active_support/core_ext'
 require 'erb'
+require 'byebug'
 
 module Phase3
   class ControllerBase < Phase2::ControllerBase
@@ -9,6 +10,8 @@ module Phase3
     # pass the rendered html to render_content
     def render(template_name)
       template = ERB.new(File.read("views/#{self.class.name.underscore}/#{template_name}.html.erb"))
+
+
       render_content(template.result(binding), "text/html")
     end
   end

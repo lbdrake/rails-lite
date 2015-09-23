@@ -8,7 +8,7 @@ module Phase4
     # deserialize the cookie into a hash
     def initialize(req)
       cook = req.cookies.find { |cookie| cookie.name == "_rails_lite_app" }
-      # debugger
+      # 
       if cook
         @cookie = JSON.parse(cook.value) #hash key-value pairs
       else
