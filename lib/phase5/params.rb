@@ -10,10 +10,11 @@ module Phase5
     # You haven't done routing yet; but assume route params will be
     # passed in as a hash to `Params.new` as below:
     def initialize(req, route_params = {})
+      
       @params = route_params
-      query_string = req.query_string.nil? ? "" : req.query_string
-      query_params = parse_www_encoded_form(query_string)
-
+      @params.merge!(parse_www_encoded_form(req.query_string)) if req.query_string
+      @params.merge!(parse_www_encoded_form(req.body)) if req.body
+      p @params
     end
 
     def [](key)
@@ -27,6 +28,7 @@ module Phase5
 
     class AttributeNotFoundError < ArgumentError; end;
 
+
     private
     # this should return deeply nested hash
     # argument format
@@ -35,32 +37,28 @@ module Phase5
     # { "user" => { "address" => { "street" => "main", "zip" => "89436" } } }
 
     def parse_www_encoded_form(www_encoded_form)
-      debugger unless www_encoded_form.empty?
-      temp_params = URI::decode_www_form(www_encoded_form, enc=Encoding::UTF_8)
-      scope = @params
-      temp_params.each do |key, value|
-        hash_item = parse_key(item) # parse_key of key only
-
-          (0..length-2).each do |i| # iterate over hash_item
-            @params << { hash_item[i] => {} }
-            # if idx == hash_item.length - 1
-            # @params[el] = value
-          # else
-          # change scope point to current param
-          scope[hash_item[i]] ||= {}
-          # user[address = {}[street = {}, zip]]
-          # user[address[zip]]
-          scope = scope[hash_item[i]]
-
+      form = URI::decode_www_form(www_encoded_form)
+      temp_params = {}
+      # require 'byebug'; byebug
+      form.each do |k, v|
+        keys = parse_key(k)
+        current = temp_params
+        keys.each_with_index do |key, index|
+          if index == (keys.length - 1)
+            current[key] = v
+          else
+            current[key] ||= {}
           end
-          @params << { key_array[-1] => decoded_form.value }
+          current = current[key]
+        end
       end
+      temp_params
     end
 
     # this should return an array
     # user[address][street] should return ['user', 'address', 'street']
     def parse_key(key)
-      key.split("/\]\[|\[|\]/")
+      key.split(/\]\[|\[|\]/)
     end
   end
 end
