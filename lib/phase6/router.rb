@@ -25,9 +25,7 @@ module Phase6
         match_data.names.each do |name|
           route_params[name] = match_data[name]
         end
-      end
-      p "Route Params: #{route_params}"
-      
+      end      
       controller_class.new(req, res, route_params).invoke_action(action_name)
     end
   end
