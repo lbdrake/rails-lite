@@ -1,7 +1,7 @@
 require 'json'
 require 'webrick'
 
-class Flash < Session
+class Flash
   attr_accessor :flash
 
   def initialize(req)

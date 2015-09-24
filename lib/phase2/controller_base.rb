@@ -1,4 +1,4 @@
-require_relative '../phase7_flash/flash_feature'
+require_relative '../phase7/flash_feature'
 
 module Phase2
   class ControllerBase
