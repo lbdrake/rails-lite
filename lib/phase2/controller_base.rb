@@ -1,3 +1,5 @@
+require_relative '../phase7_flash/flash_feature'
+
 module Phase2
   class ControllerBase
     attr_reader :req, :res
@@ -6,6 +8,7 @@ module Phase2
     def initialize(req, res)
       @req = req
       @res = res
+      @flash = Flash.new(req)
 
     end
 
